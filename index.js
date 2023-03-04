@@ -1,62 +1,9 @@
-function Employee(id, email, name) {
-    this.id = id;
-    this.email = email;
-    this.name = name;
-    this.getId = function () {
-        return this.id;
-    };
-    this.getEmail = function () {
-        return this.email;
-    };
-    this.getName = function () {
-        return this.name;
-    };
-    this.getRole = function () {
-        return 'Employee';
-    }
-}
-
-function Manager(id, email, name, officeNumber) {
-    Employee.call(this, id, email, name);
-
-    this.officeNumber = officeNumber;
-    this.getOfficeNumber = function () {
-        return this.officeNumber;
-    }
-    this.getRole = function () {
-        return 'Manager'
-    }
-}
-
-function Engineer(id, email, name, gitHub) {
-    Employee.call(this, id, email, name);
-
-    this.GitHub = gitHub;
-    this.getGithub = function () {
-        return this.getGithub;
-    }
-    this.getRole = function () {
-        return 'Engineer'
-    }
-}
-
-function Intern(id, email, name, school) {
-    Employee.call(this, id, email, name);
-
-    this.school = school;
-    this.getSchool = function () {
-        return this.school;
-    }
-    this.getRole = function () {
-        return 'Intern'
-    }
-}
 
 
 const inquirer = require('inquirer');
-// const fs = require('fs');
-// const generateMarkdown = require();
-const managerQuestions = function userInput() {
+const fs = require('fs');
+const htmlGeneration = require('./src/htmlGeneration');
+const questions = function userInput() {
     return inquirer.prompt([
 
         //Manager Name
@@ -86,20 +33,44 @@ const managerQuestions = function userInput() {
             name: 'number',
             message: 'What is the Manager\'s Office Number?',
         },
+
+        // Create an Employee?
+        {
+            type: 'confirm',
+            name: 'New Employee?',
+            message: 'Would you like to create an employee?',
+        },
     ]);
 };
 
 
+const createHTML = data => {
+    fs.writeFile('Team.html', data, null, (err) =>
+        err ? console.log(err) : console.log('Success!')
+    );
+};
 
-
-managerQuestions()
+questions()
     .then(response => {
         //console.log(response);
-        myManager = new Manager(response.id, response.email, response.name, response.number);
+        //     myManager = new Manager(response.id, response.email, response.name, response.number);
 
-        console.log(myManager);
-        console.log(myManager.getRole());
+        //     console.log(myManager);
+        //     console.log(myManager.getRole());
+        // })
+        // .catch(err => {
+        //     console.log(err)
+        // })
+
+        return htmlGeneration(response);
     })
+    // Displays data from prompts
+    .then(data => {
+        return createHTML(data);
+    })
+    // Used to log out any errors that occur
     .catch(err => {
         console.log(err)
     })
+
+console.log(htmlGeneration);
