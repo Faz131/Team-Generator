@@ -1,9 +1,24 @@
 
+// HTML creation
+const htmlGeneration = require('./src/htmlGeneration');
+
+
+// Links to employee classess
+const Manager = require('./lib/Manager');
+const Engineer = require('./lib/Engineer');
+const Inter = require('./lib/Intern');
+
 
 const inquirer = require('inquirer');
 const fs = require('fs');
-const htmlGeneration = require('./src/htmlGeneration');
-const questions = function userInput() {
+const { type } = require('os');
+const { default: Choices } = require('inquirer/lib/objects/choices');
+
+// Array to input team members
+const employeeArray = [];
+
+// Add manager questions
+const mangerPrompt = () => {
     return inquirer.prompt([
 
         //Manager Name
@@ -11,13 +26,27 @@ const questions = function userInput() {
             type: 'input',
             name: 'name',
             message: 'What is the Manager\'s name?',
+            validate: employeeInput => {
+                if (employeeInput) {
+                    return true;
+                } else {
+                    console.log('Please provide a name');
+                } return false;
+            }
         },
 
         //Manager ID
         {
             type: 'input',
             name: 'id',
-            message: 'What is the Manager\'s EMployee ID?',
+            message: 'What is the Manager\'s Employee ID?',
+            validate: employeeInput => {
+                if (employeeInput) {
+                    return true;
+                } else {
+                    console.log('Please provide a ID');
+                } return false;
+            }
         },
 
         //Manager Email
@@ -25,52 +54,102 @@ const questions = function userInput() {
             type: 'input',
             name: 'email',
             message: 'What is the Manager\'s Email?',
+            validate: email => {
+                valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) // Testing if valid chars are used for an email
+                if (valid) {
+                    return true;
+                } else {
+                    console.log('Please provide a valid email address');
+                } return false;
+            }
         },
 
         //Manager Number
         {
             type: 'input',
-            name: 'number',
-            message: 'What is the Manager\'s Office Number?',
-        },
+            name: 'officeNumber',
+            message: 'What is the manager\'s phone number?',
+            validate: nameIput => {
+                if (isNaN(nameIput)) { // validating if a number was entered
+                    console.log('Please provide a valid phone number')
+                    return false;
+                } else {
+                    return true;
+                }
 
-        // Create an Employee?
-        {
-            type: 'confirm',
-            name: 'New Employee?',
-            message: 'Would you like to create an employee?',
-        },
-    ]);
-};
+            }
+
+        }
+
+    ])
 
 
-const createHTML = data => {
-    fs.writeFile('Team.html', data, null, (err) =>
-        err ? console.log(err) : console.log('Success!')
-    );
-};
 
-questions()
+        .then(inputManager => {
+            const { name, id, email, officeNumber } = inputManager;
+            const manager = new Manager(name, id, email, officeNumber);
+            employeeArray.push(manager);
+            console.log(manager)
+
+        })
+}
+mangerPrompt()
     .then(response => {
-        //console.log(response);
-        //     myManager = new Manager(response.id, response.email, response.name, response.number);
 
-        //     console.log(myManager);
-        //     console.log(myManager.getRole());
-        // })
-        // .catch(err => {
-        //     console.log(err)
-        // })
-
-        return htmlGeneration(response);
-    })
-    // Displays data from prompts
-    .then(data => {
-        return createHTML(data);
-    })
-    // Used to log out any errors that occur
-    .catch(err => {
-        console.log(err)
     })
 
-console.log(htmlGeneration);
+// Employee creation prompts
+const createEmployee = () => {
+    console.log('Now lets build your team!')
+    return inquirer.prompt([
+        {
+            type: 'list',
+            name: 'role',
+            message: 'Please choose an employee to create',
+            choices: ['Engineer', 'Intern']
+
+        },
+
+        {
+            type: 'input',
+            name: 'name',
+            message: 'What is your team members name?',
+            validate: nameIput => {
+                if (nameIput) {
+                    return true;
+                } else {
+                    console.log('Please provide a valid name');
+                    return false;
+                }
+            }
+        },
+
+        {
+            type: 'input',
+            name: 'id',
+            message: 'Please provide the ID for your team member',
+            validate: employeeInput => {
+                if (employeeInput) {
+                    return true;
+                } else {
+                    console.log('Please enter a valid employee ID')
+                    return false;
+                }
+            }
+        },
+
+        {
+            type: 'input',
+            name: 'email',
+            message: 'What is the employee\'s Email?',
+            validate: email => {
+                valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) // Testing if valid chars are used for an email
+                if (valid) {
+                    return true;
+                } else {
+                    console.log('Please provide a valid email address');
+                } return false;
+            }
+        },
+    ])
+}
