@@ -93,10 +93,7 @@ const mangerPrompt = () => {
 
         })
 }
-mangerPrompt()
-    .then(response => {
 
-    })
 
 // Employee creation prompts
 const createEmployee = () => {
@@ -151,5 +148,33 @@ const createEmployee = () => {
                 } return false;
             }
         },
+
+        {
+            type: 'input',
+            name: 'github',
+            message: 'Please provide a Githumb username',
+            when: (input) => input.role === 'Engineer'// If engineer is choosen prompted for Github username
+        },
+
+        {
+            type: 'input',
+            name: 'school',
+            message: 'Please provide a school name',
+            when: (input) => input.role === 'Intern'// If intern is choosen prompts for school name
+
+        }
+
+
     ])
+
+
+
 }
+
+// mangerPrompt()
+//     .then(response => {
+
+//     })
+
+mangerPrompt()
+    .then(createEmployee)
