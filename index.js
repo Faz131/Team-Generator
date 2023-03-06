@@ -162,14 +162,30 @@ const createEmployee = () => {
             message: 'Please provide a school name',
             when: (input) => input.role === 'Intern'// If intern is choosen prompts for school name
 
+        },
+
+        {
+            type: 'confirm',
+            name: 'employeeInfo',
+            message: 'Do you have an employee to add?'
         }
-
-
     ])
 
 
+        .then(employeeInfo) => {
+    const { name, id, emprole, github, school, employeeInfo } = teamData;
+    const employee;
+
+    if (role === 'Engineer') // Decision based on employee role
+        teamData = new Engineer(name, id, emai, github);
 
 }
+  
+    
+    
+}
+
+
 
 // mangerPrompt()
 //     .then(response => {
