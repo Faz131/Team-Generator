@@ -6,13 +6,14 @@ const htmlGeneration = require('./src/htmlGeneration');
 // Links to employee classess
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
-const Inter = require('./lib/Intern');
+const Intern = require('./lib/Intern');
 
 
 const inquirer = require('inquirer');
 const fs = require('fs');
-const { type } = require('os');
-const { default: Choices } = require('inquirer/lib/objects/choices');
+// const { type } = require('os');
+// const { default: Choices } = require('inquirer/lib/objects/choices');
+// const Intern = require('./lib/Intern');
 
 // Array to input team members
 const employeeArray = [];
@@ -97,7 +98,7 @@ const mangerPrompt = () => {
 
 // Employee creation prompts
 const createEmployee = () => {
-    console.log('Now lets build your team!')
+    console.log('Now lets build your team!');
     return inquirer.prompt([
         {
             type: 'list',
@@ -169,28 +170,54 @@ const createEmployee = () => {
             name: 'employeeInfo',
             message: 'Do you have an employee to add?'
         }
+
     ])
 
 
-        .then(employeeInfo) => {
-    const { name, id, emprole, github, school, employeeInfo } = teamData;
-    const employee;
+        .then(staffInfo => {
+            let { name, id, emprole, github, school, employeeInfo } = staffInfo;
+            let employee;
 
-    if (role === 'Engineer') // Decision based on employee role
-        teamData = new Engineer(name, id, emai, github);
+            // Decision based on employee role
+            if (emprole === 'Engineer') {
+                employee = new Engineer(name, id, email, github);
+                console.log(employee);
+            } else if (emprole === 'Intern') {
+                employee = new Intern(name, id, email, school)
+                console.log(employee);
+            }
 
+            employeeArray.push(employee); // adds either an Engineer or Intern to array
+
+            if (employeeInfo) {
+                return createEmployee(employeeArray);
+            } else {
+                return employeeArray;
+            }
+
+        })
 }
-  
-    
-    
+
+
+const writeFile = data => {
+    fs.writeFile('./dist/index.html', data, err => {
+        if (err) {
+            console.log(err);
+            return;
+        } else {
+            console.log('Succesful HTML page created')
+        }
+    }
+    )
 }
 
 
 
-// mangerPrompt()
-//     .then(response => {
 
-//     })
-
+// Chain promises to trigger each promp
 mangerPrompt()
     .then(createEmployee)
+    .then(employeeArray => {
+        return htmlGeneration(employeeArray)
+    })
+
