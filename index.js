@@ -8,6 +8,9 @@ const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 
+// Outpult director for the HTML
+
+
 
 const inquirer = require('inquirer');
 const fs = require('fs');
@@ -219,5 +222,6 @@ mangerPrompt()
     .then(createEmployee)
     .then(employeeArray => {
         return htmlGeneration(employeeArray)
+
     })
 

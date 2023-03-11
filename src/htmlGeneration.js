@@ -1,5 +1,5 @@
 
-function htmlGeneration(data) {
+function htmlGeneration(employeeArray) {
 
 
     ` header {
@@ -44,19 +44,25 @@ function htmlGeneration(data) {
         <p>${manager.officeNumber}</p>`;
     }
 
+    const classEngineer = function (engineer) {
+        return
+
         ` <div class="card2">${this.engineer}</div>
-        <h3>${engineer.id}</h3>
+        <h3>${engineer.name}</h3>
         <p>${engineer.email}</p>
         <p>${engineer.gitHub}</p>
-        `
+        `;
+    }
 
+    const classIntern = function (intern) {
+        return
         `<div class="card5">${this.intern}</div>
        
         <h3>${intern.id}</h3>
         <p>${intern.email}</p>
         <p>${intern.school}</p>
-    </div>`
+    </div>`;
+    }
 }
-
 
 module.exports = htmlGeneration;
